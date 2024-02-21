@@ -1,11 +1,11 @@
+import { myUserRoute } from "./routes/myUserRoute";
+import { env } from "./lib/env";
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import "dotenv/config";
-import myUserRoute from "./routes/myUserRoute";
 
 mongoose
-  .connect(process.env.MONGODB_CONNECTION_STRING as string)
+  .connect(env.MONGODB_CONNECTION_STRING as string)
   .then(() => console.log("Connected to MongoDB"));
 
 const app = express();
