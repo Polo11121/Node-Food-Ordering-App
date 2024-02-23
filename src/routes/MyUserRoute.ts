@@ -13,4 +13,5 @@ myUserRoute
     jwtParse,
     validateMyUserRequest,
     myUserController.updateCurrentUser
-  );
+  )
+  .get("/", jwtCheck, jwtParse, myUserController.getCurrentUser);
