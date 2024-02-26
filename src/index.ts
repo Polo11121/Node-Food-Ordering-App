@@ -7,8 +7,9 @@ import { v2 as cloudinary } from "cloudinary";
 import { myRestaurantRoute } from "./routes/myRestaurantRoute";
 
 mongoose
-  .connect(env.MONGODB_CONNECTION_STRING as string)
-  .then(() => console.log("Connected to MongoDB"));
+  .connect(env.MONGODB_CONNECTION_STRING)
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((error) => console.log(error));
 
 cloudinary.config({
   cloud_name: env.CLOUDINARY_CLOUD_NAME,
