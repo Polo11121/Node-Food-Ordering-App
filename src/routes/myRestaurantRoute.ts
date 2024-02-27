@@ -1,4 +1,3 @@
-import { getRestaurant } from "./../controllers/myRestaurantController";
 import { myRestaurantController } from "../controllers/myRestaurantController";
 import { jwtCheck, jwtParse } from "../middleware/auth";
 import { validateMyRestaurantRequest } from "../middleware/validation";
@@ -24,5 +23,13 @@ myRestaurantRoute
     jwtParse,
     validateMyRestaurantRequest,
     myRestaurantController.createRestaurant
+  )
+  .put(
+    "/",
+    upload.single("imageFile"),
+    jwtCheck,
+    jwtParse,
+    validateMyRestaurantRequest,
+    myRestaurantController.updateRestaurant
   )
   .get("/", jwtCheck, jwtParse, myRestaurantController.getRestaurant);
