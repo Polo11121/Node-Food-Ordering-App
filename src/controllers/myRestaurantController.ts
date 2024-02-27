@@ -8,6 +8,7 @@ const createRestaurant = async (req: Request, res: Response) => {
     user: req.userId,
   });
 
+  console.log();
   if (existingRestaurant.length) {
     return res.status(400).json({ message: "User restaurant already exists" });
   }
@@ -35,4 +36,21 @@ const createRestaurant = async (req: Request, res: Response) => {
   }
 };
 
-export const myRestaurantController = { createRestaurant };
+export const getRestaurant = async (req: Request, res: Response) => {
+  try {
+    const restaurant = await Restaurant.findOne({
+      user: req.userId,
+    });
+
+    if (!restaurant) {
+      return res.status(404).json({ message: "Restaurant not found" });
+    }
+
+    res.status(200).json(restaurant.toObject());
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error getting restaurant" });
+  }
+};
+
+export const myRestaurantController = { createRestaurant, getRestaurant };

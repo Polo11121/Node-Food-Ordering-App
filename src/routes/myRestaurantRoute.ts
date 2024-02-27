@@ -1,3 +1,4 @@
+import { getRestaurant } from "./../controllers/myRestaurantController";
 import { myRestaurantController } from "../controllers/myRestaurantController";
 import { jwtCheck, jwtParse } from "../middleware/auth";
 import { validateMyRestaurantRequest } from "../middleware/validation";
@@ -15,11 +16,13 @@ const upload = multer({
 
 export const myRestaurantRoute = express.Router();
 
-myRestaurantRoute.post(
-  "/",
-  upload.single("imageFile"),
-  jwtCheck,
-  jwtParse,
-  validateMyRestaurantRequest,
-  myRestaurantController.createRestaurant
-);
+myRestaurantRoute
+  .post(
+    "/",
+    upload.single("imageFile"),
+    jwtCheck,
+    jwtParse,
+    validateMyRestaurantRequest,
+    myRestaurantController.createRestaurant
+  )
+  .get("/", jwtCheck, jwtParse, myRestaurantController.getRestaurant);
