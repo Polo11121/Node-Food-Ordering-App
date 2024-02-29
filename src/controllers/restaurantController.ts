@@ -11,12 +11,22 @@ const searchRestaurants = async (req: Request, res: Response) => {
 
     let query: any = {};
 
-    query.city = city;
+    query.city = new RegExp(city, "i");
+
     const cityCheck = await Restaurant.countDocuments(query);
 
     if (!cityCheck) {
-      return res.status(404).json([]);
+      return res.status(200).json({
+        data: [],
+        pagination: {
+          total: 0,
+          page,
+          pageSize: 10,
+          totalPages: 0,
+        },
+      });
     }
+
     if (selectedCuisines) {
       const cuisinesArray = selectedCuisines
         .split(",")
