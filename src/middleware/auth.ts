@@ -1,7 +1,7 @@
-import { auth } from "express-oauth2-jwt-bearer";
-import { env } from "../lib/env";
 import { NextFunction, Request, Response } from "express";
+import { auth } from "express-oauth2-jwt-bearer";
 import { User } from "../models/user";
+import { env } from "../lib/env";
 import jwt from "jsonwebtoken";
 
 declare global {
