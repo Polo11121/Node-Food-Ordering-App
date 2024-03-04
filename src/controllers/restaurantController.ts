@@ -1,5 +1,6 @@
 import { Restaurant } from "../models/restaurant";
 import { Request, Response } from "express";
+import { Types } from "mongoose";
 
 const searchRestaurants = async (req: Request, res: Response) => {
   try {
@@ -81,6 +82,9 @@ const getRestaurantById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
+    if (!Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid restaurant id" });
+    }
     const restaurant = await Restaurant.findById(id);
 
     if (!restaurant) {
