@@ -1,6 +1,7 @@
 import { MenuItem, Restaurant } from "../models/restaurant";
 import { Request, Response } from "express";
 import { env } from "../lib/env";
+import { Order } from "../models/order";
 import Stripe from "stripe";
 
 type CheckoutSessionRequest = {
@@ -96,6 +97,14 @@ const createCheckoutSession = async (req: Request, res: Response) => {
     return res.status(404).json({ message: "Restaurant not found" });
   }
 
+  const newOrder = new Order({
+    restaurant: restaurant._id,
+    user: req.userId,
+    status: "placed",
+    deliveryDetails: checkoutSessionRequest.deliveryDetails,
+    cartItems: checkoutSessionRequest.cartItems,
+  });
+
   const lineItems = createLineItems(
     checkoutSessionRequest,
     restaurant.menuItems
@@ -103,7 +112,7 @@ const createCheckoutSession = async (req: Request, res: Response) => {
 
   const session = await createSession(
     lineItems,
-    "TEST_ORDER_ID",
+    newOrder._id.toString(),
     restaurant.deliveryPrice,
     restaurant._id.toString()
   );
@@ -111,6 +120,8 @@ const createCheckoutSession = async (req: Request, res: Response) => {
   if (!session.url) {
     return res.status(500).json({ message: "Internal server error" });
   }
+
+  await newOrder.save();
 
   res.status(200).json({ url: session.url });
 
@@ -121,6 +132,39 @@ const createCheckoutSession = async (req: Request, res: Response) => {
   }
 };
 
+const stripeWebhookHandler = async (req: Request, res: Response) => {
+  let event;
+
+  try {
+    const sig = req.headers["stripe-signature"];
+
+    event = STRIPE.webhooks.constructEvent(
+      req.body,
+      sig as string,
+      env.STRIPE_WEBHOOK_SECRET
+    );
+  } catch (error: any) {
+    console.log(error);
+    res.status(400).send(`Webhook Error: ${error.message}`);
+  }
+
+  if (event?.type === "checkout.session.completed") {
+    const order = await Order.findById(event.data.object.metadata?.orderId);
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    order.totalAmount = event.data.object.amount_total;
+    order.status = "paid";
+
+    await order.save();
+  }
+
+  res.status(200).send();
+};
+
 export const orderController = {
   createCheckoutSession,
+  stripeWebhookHandler,
 };

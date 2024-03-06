@@ -10,4 +10,5 @@ export const env = cleanEnv(process.env, {
   CLOUDINARY_API_SECRET: str(),
   STRIPE_API_KEY: str(),
   FRONTEND_URL: str(),
+  STRIPE_WEBHOOK_SECRET: str(),
 });
