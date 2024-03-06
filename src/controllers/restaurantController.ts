@@ -74,7 +74,7 @@ const searchRestaurants = async (req: Request, res: Response) => {
     res.status(200).json(response);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "Error getting restaurants" });
   }
 };
 
@@ -94,7 +94,7 @@ const getRestaurantById = async (req: Request, res: Response) => {
     res.status(200).json(restaurant);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "Error getting restaurant by id" });
   }
 };
 export const restaurantController = {

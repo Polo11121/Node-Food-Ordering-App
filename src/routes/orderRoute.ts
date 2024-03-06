@@ -11,4 +11,5 @@ orderRouter
     jwtParse,
     orderController.createCheckoutSession
   )
-  .post("/checkout/webhook", orderController.stripeWebhookHandler);
+  .post("/checkout/webhook", orderController.stripeWebhookHandler)
+  .get("/", jwtCheck, jwtParse, orderController.getMyOrders);

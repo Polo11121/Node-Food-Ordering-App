@@ -164,7 +164,21 @@ const stripeWebhookHandler = async (req: Request, res: Response) => {
   res.status(200).send();
 };
 
+const getMyOrders = async (req: Request, res: Response) => {
+  try {
+    const orders = await Order.find({ user: req.userId })
+      .populate("restaurant")
+      .populate("user");
+
+    res.status(200).json(orders);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error getting user orders" });
+  }
+};
+
 export const orderController = {
   createCheckoutSession,
   stripeWebhookHandler,
+  getMyOrders,
 };
