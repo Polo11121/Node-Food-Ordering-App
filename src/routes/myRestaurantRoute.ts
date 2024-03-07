@@ -32,5 +32,11 @@ myRestaurantRoute
     validateMyRestaurantRequest,
     myRestaurantController.updateRestaurant
   )
+  .patch(
+    "/order/:orderId/status",
+    jwtCheck,
+    jwtParse,
+    myRestaurantController.updateOrderStatus
+  )
   .get("/", jwtCheck, jwtParse, myRestaurantController.getRestaurant)
   .get("/order", jwtCheck, jwtParse, myRestaurantController.getOrders);
