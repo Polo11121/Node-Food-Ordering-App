@@ -32,4 +32,5 @@ myRestaurantRoute
     validateMyRestaurantRequest,
     myRestaurantController.updateRestaurant
   )
-  .get("/", jwtCheck, jwtParse, myRestaurantController.getRestaurant);
+  .get("/", jwtCheck, jwtParse, myRestaurantController.getRestaurant)
+  .get("/order", jwtCheck, jwtParse, myRestaurantController.getOrders);

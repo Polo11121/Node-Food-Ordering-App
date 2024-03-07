@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Restaurant } from "../models/restaurant";
 import { uploadImage } from "../lib/helpers";
+import { Order } from "../models/order";
 import mongoose from "mongoose";
 
 const createRestaurant = async (req: Request, res: Response) => {
@@ -85,8 +86,28 @@ export const getRestaurant = async (req: Request, res: Response) => {
   }
 };
 
+export const getOrders = async (req: Request, res: Response) => {
+  try {
+    const restaurant = await Restaurant.findOne({ user: req.userId });
+
+    if (!restaurant) {
+      return res.status(404).json({ message: "Restaurant not found" });
+    }
+
+    const orders = await Order.find({ restaurant: restaurant._id })
+      .populate("user")
+      .populate("restaurant");
+
+    res.status(200).json(orders);
+  } catch (error: any) {
+    console.log(error);
+    res.status(500).json({ message: "Error getting restaurant orders" });
+  }
+};
+
 export const myRestaurantController = {
   createRestaurant,
   updateRestaurant,
   getRestaurant,
+  getOrders,
 };

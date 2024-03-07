@@ -97,6 +97,7 @@ const getRestaurantById = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Error getting restaurant by id" });
   }
 };
+
 export const restaurantController = {
   searchRestaurants,
   getRestaurantById,
